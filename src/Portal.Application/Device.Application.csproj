@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DTOS\CicmpyConsolidated\**" />
+    <Compile Remove="DTOS\InspectionDashboard\**" />
+    <Compile Remove="DTOS\QCAQLDataSheet\**" />
+    <Compile Remove="DTOS\QCInspectionGroup\**" />
+    <Compile Remove="DTOS\QCInspectionItemCode\**" />
+    <Compile Remove="DTOS\QCInspectionRequestDetailResult\**" />
+    <Compile Remove="DTOS\QCInspectionRequestDetail\**" />
+    <EmbeddedResource Remove="DTOS\CicmpyConsolidated\**" />
+    <EmbeddedResource Remove="DTOS\InspectionDashboard\**" />
+    <EmbeddedResource Remove="DTOS\QCAQLDataSheet\**" />
+    <EmbeddedResource Remove="DTOS\QCInspectionGroup\**" />
+    <EmbeddedResource Remove="DTOS\QCInspectionItemCode\**" />
+    <EmbeddedResource Remove="DTOS\QCInspectionRequestDetailResult\**" />
+    <EmbeddedResource Remove="DTOS\QCInspectionRequestDetail\**" />
+    <None Remove="DTOS\CicmpyConsolidated\**" />
+    <None Remove="DTOS\InspectionDashboard\**" />
+    <None Remove="DTOS\QCAQLDataSheet\**" />
+    <None Remove="DTOS\QCInspectionGroup\**" />
+    <None Remove="DTOS\QCInspectionItemCode\**" />
+    <None Remove="DTOS\QCInspectionRequestDetailResult\**" />
+    <None Remove="DTOS\QCInspectionRequestDetail\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DTOS\QCInspectionRequest\QCInspectionRequestMasterDTO.cs" />
+    <Compile Remove="DTOS\QCInspectionRequest\QCInspectionRequestMasterDTODetail.cs" />
+    <Compile Remove="DTOS\QCInspectionRequest\QCInspectionRequestSaveDTO.cs" />
+    <Compile Remove="DTOS\QCInspectionRequest\QCInspectionRequestSearchParam.cs" />
+    <Compile Remove="DTOS\QCInspectionRequest\QCInspectionRequestStatusDTO.cs" />
+    <Compile Remove="Interfaces\ICicmpyConsolidatedServices.cs" />
+    <Compile Remove="Interfaces\IInspectionDashboardServices.cs" />
+    <Compile Remove="Interfaces\IQCAQLDataSheetServices.cs" />
+    <Compile Remove="Interfaces\IQCInspectionGroupServices.cs" />
+    <Compile Remove="Interfaces\IQCInspectionItemCodeServices.cs" />
+    <Compile Remove="Interfaces\IQCInspectionRequestDetailServices.cs" />
+    <Compile Remove="Interfaces\IQCInspectionRequestServices.cs" />
+    <Compile Remove="Services\CicmpyConsolidatedServices.cs" />
+    <Compile Remove="Services\InspectionDashboardServices.cs" />
+    <Compile Remove="Services\QCAQLDataSheetServices.cs" />
+    <Compile Remove="Services\QCInspectionGroupServices.cs" />
+    <Compile Remove="Services\QCInspectionItemCodeServices.cs" />
+    <Compile Remove="Services\QCInspectionRequestDetailServices.cs" />
+    <Compile Remove="Services\QCInspectionRequestServices.cs" />
+    <Compile Remove="Validators\QCInspectionRequestValidator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="SH.Core.Logging" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portal.Domain\Device.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

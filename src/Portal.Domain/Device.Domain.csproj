@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\CicmpyConsolidated.cs" />
+    <Compile Remove="Entities\InspectionDashboard.cs" />
+    <Compile Remove="Entities\QCAQLDataSheet.cs" />
+    <Compile Remove="Entities\QCInspectionGroup.cs" />
+    <Compile Remove="Entities\QCInspectionItemCode.cs" />
+    <Compile Remove="Entities\QCInspectionRequestDetail.cs" />
+    <Compile Remove="Entities\QCInspectionRequestDetailResult.cs" />
+    <Compile Remove="Entities\QCInspectionRequestMaster.cs" />
+    <Compile Remove="Interfaces\ICicmpyConsolidatedRepository.cs" />
+    <Compile Remove="Interfaces\IInspectionDashboardRepository.cs" />
+    <Compile Remove="Interfaces\IQCAQLDataSheetRepository.cs" />
+    <Compile Remove="Interfaces\IQCInspectionGroupRepository.cs" />
+    <Compile Remove="Interfaces\IQCInspectionItemCodeRepository.cs" />
+    <Compile Remove="Interfaces\IQCInspectionRequestDetailRepository.cs" />
+    <Compile Remove="Interfaces\IQCInspectionRequestDetailTemplateRepository.cs" />
+    <Compile Remove="Interfaces\IQCInspectionRequestMasterRepository.cs" />
+    <Compile Remove="Repositories\CicmpyConsolidatedRepository.cs" />
+    <Compile Remove="Repositories\ExtAppRepository.cs" />
+    <Compile Remove="Repositories\InspectionDashboardRepository.cs" />
+    <Compile Remove="Repositories\QCAQLDataSheetRepository.cs" />
+    <Compile Remove="Repositories\QCInspectionGroupRepository.cs" />
+    <Compile Remove="Repositories\QCInspectionItemCodeRepository.cs" />
+    <Compile Remove="Repositories\QCInspectionRequestDetailRepository.cs" />
+    <Compile Remove="Repositories\QCInspectionRequestDetailTemplateRepository.cs" />
+    <Compile Remove="Repositories\QCInspectionRequestMasterRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SH.DataAccess" Version="1.0.24" />
+    <PackageReference Include="SH.Share" Version="1.0.7" />
+  </ItemGroup>
+
+</Project>
