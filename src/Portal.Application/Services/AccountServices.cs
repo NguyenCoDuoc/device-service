@@ -134,7 +134,6 @@ namespace DeviceService.Application.Services
                     user.Phone,
                     user.Address,
                     user.Gender,
-                    user.cmp_wwn,
 					userDTO.IsAdmin
                 };
                 rs = new ServiceResultSuccess(data);
@@ -260,8 +259,7 @@ namespace DeviceService.Application.Services
                 new Claim("UserName", user.UserName),
                 new Claim("RefreshToken", refresh_token),
                 new Claim("IsAdministrator", user.IsAdmin?"true":"false"),
-                new Claim("FullName", user.FullName) ,
-                new Claim("cmp_wwn", user.cmp_wwn)
+                new Claim("FullName", user.FullName)
            };
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.Secret));
@@ -326,7 +324,6 @@ namespace DeviceService.Application.Services
             var pass = GenerateRandomString(8);
             var user = new Users
             {
-                cmp_wwn = model.cmp_wwn,
                 Email = model.Email.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim(),
                 UserName = model.UserName,
                 FullName = model.Name,

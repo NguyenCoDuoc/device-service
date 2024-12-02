@@ -106,9 +106,14 @@ namespace DeviceService.API.Controllers
         /// <param name="deviceTypeId">Device type id</param>
         /// <returns>List of device type attributes</returns>
         [HttpGet("{deviceTypeId}/attributes")]
-        public async Task<IEnumerable<DeviceTypeAttributeDto>> GetDeviceTypeAttributes(long deviceTypeId)
+        public async Task<IEnumerable<DeviceTypeAttributeDto>> GetDeviceTypeAttributes(string deviceTypeId)
         {
-            return await _DeviceTypeService.GetDeviceTypeAttributes(deviceTypeId);
+            if (!long.TryParse(deviceTypeId, out var id))
+            {
+                return new List<DeviceTypeAttributeDto>() ;
+            }
+
+            return await _DeviceTypeService.GetDeviceTypeAttributes(id);
         }
 
         /// <summary>

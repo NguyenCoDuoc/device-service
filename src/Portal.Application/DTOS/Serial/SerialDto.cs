@@ -15,4 +15,27 @@
         public long? Id { get; set; }
 
     }
+
+    public class SerialAttributeDto
+    {
+        public string? Description { get; set; }
+
+        public long AttributeId { get; set; }
+
+        public required long SerialId { get; set; }
+
+        public required long AttributeValueId { get; set; }
+
+        public string? AttributeName { get; set; }
+
+        public string? AttributeValue { get; set; }
+        public int? Id { get; set; }
+    }
+
+    /// <summary>
+    /// Serial  attribute create dto
+    /// </summary>
+    public class SerialAttributeDtoCreate : SerialAttributeDto
+    {
+    }
 }

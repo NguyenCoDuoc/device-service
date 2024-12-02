@@ -35,10 +35,11 @@ namespace DeviceService.Domain.Repositories
                         FROM device_type_attribute dat 
                         LEFT JOIN attribute a ON dat.attribute_id = a.id
                         LEFT JOIN attribute_value av ON dat.attribute_value_id = av.id
-                        WHERE device_type_id = @deviceTypeId";
+                        WHERE device_type_id = @deviceTypeId and dat.is_deleted=false";
 
             return (await QueryAsync<DeviceTypeAttribute>(sql, new Dictionary<string, object> { { "deviceTypeId", deviceTypeId } })).ToList();
-        }   
+        }
+
 
         /// <summary>
         /// Add device type attribute

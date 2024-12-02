@@ -94,7 +94,6 @@ namespace DeviceService.Application.Validators
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
             RuleFor(x => x.Phone).NotEmpty().WithMessage("Phone number is required");
-            RuleFor(x => x.cmp_wwn).NotEmpty().WithMessage("cmp_wwn is required");
         }
         // Hàm helper để kiểm tra định dạng email
         private bool IsValidEmail(string email)

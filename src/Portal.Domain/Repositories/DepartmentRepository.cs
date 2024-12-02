@@ -35,5 +35,22 @@ namespace DeviceService.Domain.Repositories
             return departments.ToList();
         }
 
+        public async Task<List<Department?>> GetDepartmentSimple(long tenant_id)
+        {
+            var query = @"
+                        SELECT d.code,d.name
+                        JOIN department d 
+                        WHERE d.tenant_id = @tenant_id
+                    ";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@tenant_id", tenant_id }
+            };
+
+            var departments = await QueryAsync<Department?>(query, parameters);
+
+            return departments.ToList();
+        }
+
     }
 }

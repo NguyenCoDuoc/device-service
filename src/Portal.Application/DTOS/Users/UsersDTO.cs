@@ -20,7 +20,6 @@ namespace DeviceService.Application.DTOS.Users
         public bool IsAdmin { get; set; }
         public long? Parent { get; set; }
         public string? Description { get; set; }
-		public string cmp_wwn { get; set; }
 		public string? Country { get; set; }
 		public string? State { get; set; }
 		public string? City { get; set; }

@@ -41,7 +41,6 @@ namespace DeviceService.Application.ContextAccessors
         public string FullName { get => GetClaimValue("FullName"); }
         public string RefreshToken { get => GetClaimValue("RefreshToken"); }
         public long Parent { get => Convert.ToInt32(GetClaimValue("Parent")); }
-        public string cmp_wwn { get => GetClaimValue("cmp_wwn"); }
 
     }
 }

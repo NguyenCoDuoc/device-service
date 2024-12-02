@@ -16,6 +16,5 @@ namespace DeviceService.Application.ContextAccessors
         bool IsAdministrator { get; }
         string FullName { get; }
         long Parent { get; }
-        string cmp_wwn { get; }
     }
 }

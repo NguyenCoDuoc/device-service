@@ -40,7 +40,5 @@ namespace DeviceService.Domain.Entities
         public long? Parent { get; set; }
         [Description("Mô tả")]
         public string Description { get; set; }
-		[Description("Mã nhà cung cấp")]
-		public string cmp_wwn { get; set; }
 	}
 }
