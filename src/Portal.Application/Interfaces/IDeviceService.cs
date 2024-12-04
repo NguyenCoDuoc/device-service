@@ -46,5 +46,13 @@ namespace DeviceService.Application.Interfaces
         /// <param name="id"></param>
         /// DUOCNC 20240916
         Task<bool> DeleteAsync( long id);
+
+
+        Task<List<DeviceAttributeDto>> GetDeviceAttributes(long deviceId);
+
+        Task<int> AddDeviceAttribute(DeviceAttributeDto deviceAttribute);
+
+        
+        Task<int> DeleteDeviceAttribute(long id);
     }
 }

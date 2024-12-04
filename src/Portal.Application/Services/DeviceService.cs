@@ -91,28 +91,16 @@ public class DeviceService
         return await _DeviceRepository.DeleteAsync(id, current_user_id);
     }
 
-    /// <summary>
-    /// Get device  attributes by device  id
-    /// </summary>
-    /// <param name="deviceId">Device type </param>
-    /// <returns>List of device type attributes</returns>
     public async Task<List<DeviceAttributeDto>> GetDeviceAttributes(long deviceId)
     {
         return _mapper.Map<List<DeviceAttributeDto>>(await _DeviceRepository.GetDeviceAttributes(deviceId));
     }
 
-    /// <summary>
-    /// Add device  attribute
-    /// </summary>
-    /// <param name="devicettribute">Device  attribute</param>
-    /// <returns>Device  attribute id</returns>
-    /// DUOCNC 20241106
     public async Task<int> AddDeviceAttribute(DeviceAttributeDto deviceAttribute)
     {
         return await _DeviceRepository.AddDeviceAttribute(_mapper.Map<DeviceAttribute>(deviceAttribute), current_user_id);
     }
 
-    //delete device  attribute
     public async Task<int> DeleteDeviceAttribute(long id)
     {
         return await _DeviceRepository.DeleteDeviceAttribute(id, current_user_id);

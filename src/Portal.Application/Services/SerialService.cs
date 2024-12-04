@@ -16,7 +16,7 @@ public class SerialService
 {
     private readonly ISerialRepository _SerialRepository;
     private readonly IMapper _mapper;
-    private readonly long current_Serial_id;
+    private readonly long current_user_id;
 
     public SerialService(ISerialRepository SerialRepository, IMapper mapper)
     {
@@ -43,7 +43,7 @@ public class SerialService
 
     public async Task<ServiceResult> CreateAsync(SerialDtoCreate model)
     {
-        model.CreatedBy = current_Serial_id;
+        model.CreatedBy = current_user_id;
         model.CreatedDate = DateTime.Now;
 
         var validator = new SerialValidator();
@@ -83,6 +83,21 @@ public class SerialService
 
     public async Task<bool> DeleteAsync(long id)
     {
-        return await _SerialRepository.DeleteAsync(id, current_Serial_id);
+        return await _SerialRepository.DeleteAsync(id, current_user_id);
+    }
+
+    public async Task<List<SerialAttributeDto>> GetSerialAttributes(long deviceId)
+    {
+        return _mapper.Map<List<SerialAttributeDto>>(await _SerialRepository.GetSerialAttributes(deviceId));
+    }
+
+    public async Task<int> AddSerialAttribute(SerialAttributeDto serialAttribute)
+    {
+        return await _SerialRepository.AddSerialAttribute(_mapper.Map<SerialAttribute>(serialAttribute), current_user_id);
+    }
+
+    public async Task<int> DeleteSerialAttribute(long id)
+    {
+        return await _SerialRepository.DeleteSerialAttribute(id, current_user_id);
     }
 }

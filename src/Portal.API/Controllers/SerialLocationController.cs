@@ -2,7 +2,6 @@
 using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
@@ -15,13 +14,11 @@ namespace DeviceService.API.Controllers
     public class SerialLocationController : BaseController
     {
         private readonly ISerialLocationService _SerialLocationService;
-        private readonly IJsActionResult _result;
 
 
-        public SerialLocationController(ISerialLocationService SerialLocationService, IJsActionResult sunactionresult)
+        public SerialLocationController(ISerialLocationService SerialLocationService)
         {
             _SerialLocationService = SerialLocationService;
-            _result = sunactionresult;
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _SerialLocationService.GetByIdAsync(id));
+            return JSonResult(await _SerialLocationService.GetByIdAsync(id));
         }
         
         /// <summary>

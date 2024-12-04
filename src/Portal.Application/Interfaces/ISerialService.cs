@@ -40,5 +40,12 @@ namespace DeviceService.Application.Interfaces
         /// <param name="id"></param>
         /// DUOCNC 20240916
         Task<bool> DeleteAsync( long id);
+
+        Task<List<SerialAttributeDto>> GetSerialAttributes(long serial);
+
+        Task<int> AddSerialAttribute(SerialAttributeDto serialAttribute);
+
+
+        Task<int> DeleteSerialAttribute(long id);
     }
 }

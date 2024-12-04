@@ -2,10 +2,10 @@
 using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
+using DeviceService.Application.Services;
 
 namespace DeviceService.API.Controllers
 {
@@ -15,13 +15,11 @@ namespace DeviceService.API.Controllers
     public class SerialController : BaseController
     {
         private readonly ISerialService _SerialService;
-        private readonly IJsActionResult _result;
 
 
-        public SerialController(ISerialService SerialService, IJsActionResult sunactionresult)
+        public SerialController(ISerialService SerialService)
         {
             _SerialService = SerialService;
-            _result = sunactionresult;
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _SerialService.GetByIdAsync(id));
+            return JSonResult(await _SerialService.GetByIdAsync(id));
         }
         
         /// <summary>
@@ -88,6 +86,30 @@ namespace DeviceService.API.Controllers
         public async Task<IActionResult> Delete(long id)
         { 
             return Ok(await _SerialService.DeleteAsync(id));
+        }
+
+        [HttpGet("{serialId}/attributes")]
+        public async Task<IEnumerable<SerialAttributeDto>> GetSerialAttributes(string serialId)
+        {
+            if (!long.TryParse(serialId, out var id))
+            {
+                return new List<SerialAttributeDto>();
+            }
+
+            return await _SerialService.GetSerialAttributes(id);
+        }
+
+        [HttpPost("{serialId}/attributes")]
+        public async Task<IActionResult> AddSerialAttribute(SerialAttributeDto serialAttributeDto)
+        {
+            return Ok(await _SerialService.AddSerialAttribute(serialAttributeDto));
+        }
+
+
+        [HttpDelete("attributes/{id}")]
+        public async Task<IActionResult> DeleteSerialAttribute(long id)
+        {
+            return Ok(await _SerialService.DeleteSerialAttribute(id));
         }
     }
 }

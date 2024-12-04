@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
-using Sun.Core.BaseServiceCollection.Interfaces;
 
 
 namespace DeviceService.API.Controllers
@@ -16,12 +15,10 @@ namespace DeviceService.API.Controllers
     public class AttributeController : BaseController
     {
         private readonly IAttributeService _AttributeService;
-        private readonly IJsActionResult _result;
 
-        public AttributeController(IAttributeService AttributeService, IJsActionResult sunactionresult, IAccountServices accountServices)
+        public AttributeController(IAttributeService AttributeService , IAccountServices accountServices)
         {
             _AttributeService = AttributeService;
-            _result = sunactionresult;
         }
 
         [HttpGet]
@@ -54,7 +51,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _AttributeService.GetByIdAsync(id));
+            return JSonResult(await _AttributeService.GetByIdAsync(id));
         }
         
         /// <summary>

@@ -3,7 +3,6 @@ using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using System.Security.Claims;

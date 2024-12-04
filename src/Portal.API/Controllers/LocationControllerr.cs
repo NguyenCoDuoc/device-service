@@ -2,7 +2,6 @@
 using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
@@ -16,13 +15,11 @@ namespace DeviceService.API.Controllers
     public class LocationController : BaseController
     {
         private readonly ILocationService _locationService;
-        private readonly IJsActionResult _result;
 
 
-        public LocationController(ILocationService LocationService, IJsActionResult sunactionresult)
+        public LocationController(ILocationService LocationService)
         {
             _locationService = LocationService;
-            _result = sunactionresult;
         }
 
         /// <summary>
@@ -55,7 +52,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _locationService.GetByIdAsync(id));
+            return JSonResult(await _locationService.GetByIdAsync(id));
         }
         
         /// <summary>

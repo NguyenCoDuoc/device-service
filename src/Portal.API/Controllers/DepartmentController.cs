@@ -1,9 +1,7 @@
 ﻿using DeviceService.Application.DTOS;
 using DeviceService.Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
@@ -16,13 +14,11 @@ namespace DeviceService.API.Controllers
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentService _departmentService;
-        private readonly IJsActionResult _result;
 
 
-        public DepartmentController(IDepartmentService DepartmentService, IJsActionResult sunactionresult)
+        public DepartmentController(IDepartmentService DepartmentService)
         {
             _departmentService = DepartmentService;
-            _result = sunactionresult;
         }
 
         /// <summary>
@@ -55,7 +51,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _departmentService.GetByIdAsync(id));
+            return JSonResult(await _departmentService.GetByIdAsync(id));
         }
         
         /// <summary>

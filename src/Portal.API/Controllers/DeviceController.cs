@@ -3,10 +3,10 @@ using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
+using DeviceService.Application.Services;
 
 namespace DeviceService.API.Controllers
 {
@@ -96,6 +96,46 @@ namespace DeviceService.API.Controllers
         public async Task<IEnumerable<BaseDto>> GetAllDevice()
         {
             return await _DeviceService.GetAllAsync();
+        }
+
+
+        /// <summary>
+        /// GetDeviceAttributes
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
+        [HttpGet("{deviceId}/attributes")]
+        public async Task<IEnumerable<DeviceAttributeDto>> GetDeviceAttributes(string deviceId)
+        {
+            if (!long.TryParse(deviceId, out var id))
+            {
+                return new List<DeviceAttributeDto>();
+            }
+
+            return await _DeviceService.GetDeviceAttributes(id);
+        }
+
+        /// <summary>
+        /// AddDeviceAttribute
+        /// </summary>
+        /// <param name="deviceAttribute"></param>
+        /// <returns></returns>
+        [HttpPost("{deviceId}/attributes")]
+        public async Task<IActionResult> AddDeviceAttribute(DeviceAttributeDtoCreate deviceAttribute)
+        {
+            return Ok(await _DeviceService.AddDeviceAttribute(deviceAttribute));
+        }
+
+        /// <summary>
+        /// DeleteDeviceAttribute
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [HttpDelete("attributes/{id}")]
+        public async Task<IActionResult> DeleteDeviceAttribute(long id)
+        {
+            return Ok(await _DeviceService.DeleteDeviceAttribute(id));
         }
     }
 }

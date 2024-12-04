@@ -2,7 +2,6 @@
 using DeviceService.Application.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Sun.Core.BaseServiceCollection.Interfaces;
 using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using DeviceService.Common.Controllers;
@@ -15,13 +14,11 @@ namespace DeviceService.API.Controllers
     public class JobtitleController : BaseController
     {
         private readonly IJobtitleService _JobtitleService;
-        private readonly IJsActionResult _result;
 
 
-        public JobtitleController(IJobtitleService JobtitleService, IJsActionResult sunactionresult)
+        public JobtitleController(IJobtitleService JobtitleService)
         {
             _JobtitleService = JobtitleService;
-            _result = sunactionresult;
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace DeviceService.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            return _result.JsonResult(await _JobtitleService.GetByIdAsync(id));
+            return JSonResult(await _JobtitleService.GetByIdAsync(id));
         }
         
         /// <summary>
