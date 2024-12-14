@@ -132,7 +132,7 @@ namespace DeviceService.API.Controllers
         /// </summary>
         /// <param name="id">Device type attribute id</param>
         /// DUOCNC 20241106
-        [HttpDelete("/attributes/{id}")]
+        [HttpDelete("attributes/{id}")]
         public async Task<IActionResult> DeleteDeviceTypeAttribute(long id)
         {
             return Ok(await _DeviceTypeService.DeleteDeviceTypeAttribute(id));

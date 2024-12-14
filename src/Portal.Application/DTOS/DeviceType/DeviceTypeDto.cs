@@ -11,7 +11,7 @@
         public long? Id { get; set; }
         public long ParentId { get; set; }
         public long Level { get; set; }
-        public  List<DeviceTypeAttributeDto> Attributes { get; set; }
+        public  List<DeviceTypeAttributeDto>? Attributes { get; set; }
     }
 
     /// <summary>

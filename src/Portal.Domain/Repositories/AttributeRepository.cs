@@ -18,7 +18,14 @@ namespace DeviceService.Domain.Repositories
 
         public async Task<IEnumerable<Attribute>> GetAllAsync()
         {
-            return await QueryAsync<Attribute>("SELECT * FROM attribute WHERE is_deleted = 0");
+            try
+            {
+                return await QueryAsync<Attribute>("SELECT * FROM attribute WHERE is_deleted = false");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
