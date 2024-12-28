@@ -28,10 +28,11 @@ public class AttributeService
     {
         var result = new PagingResult<AttributeDto>()
             { PageSize = pagingParams.ItemsPerPage, CurrentPage = pagingParams.Page };
-        var where = "name ILIKE @name OR description ILIKE @description";
+        var where = "name ILIKE @name OR description ILIKE @description OR code ILIKE @code";
         var param = new Dictionary<string, object>();
         param.Add("name", $"%{pagingParams.Term}%");
         param.Add("description", $"%{pagingParams.Term}%");
+        param.Add("code", $"%{pagingParams.Term}%");
         var data = await _AttributeRepository.GetPageAsync<AttributeDto>(pagingParams.Page, pagingParams.ItemsPerPage,
                 order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc, param: param, where: where);
         result.Data = _mapper.Map<List<AttributeDto>>(data.Data);

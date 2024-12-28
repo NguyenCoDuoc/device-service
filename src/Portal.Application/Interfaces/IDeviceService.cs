@@ -31,7 +31,7 @@ namespace DeviceService.Application.Interfaces
         /// Lấy all  thiết bị
         /// </summary>
         /// DUOCNC 20240916
-        Task<IEnumerable<BaseDto>> GetAllAsync();
+        Task<IEnumerable<DeviceDto>> GetAllAsync();
 
         /// <summary>
         /// Chi tiết  thiết bị

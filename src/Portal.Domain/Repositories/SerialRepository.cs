@@ -25,7 +25,7 @@ namespace DeviceService.Domain.Repositories
                         FROM serial_attribute dat
                         LEFT JOIN attribute a ON dat.attribute_id = a.id
                         LEFT JOIN attribute_value av ON dat.attribute_value_id = av.id
-                        WHERE serial_id = 1 and dat.is_deleted=false";
+                        WHERE dat.is_deleted=false";
 
             return (await QueryAsync<SerialAttribute>(sql, new Dictionary<string, object> { { "serialId", serialId } })).ToList();
         }

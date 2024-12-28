@@ -93,7 +93,7 @@ namespace DeviceService.API.Controllers
         /// DUOCNC 20240916
         [HttpGet]
         [Route("all")]
-        public async Task<IEnumerable<BaseDto>> GetAllDevice()
+        public async Task<IEnumerable<DeviceDto>> GetAllDevice()
         {
             return await _DeviceService.GetAllAsync();
         }

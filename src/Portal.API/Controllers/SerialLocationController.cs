@@ -9,7 +9,7 @@ using DeviceService.Common.Controllers;
 namespace DeviceService.API.Controllers
 {
     [ApiController]
-    [Route("api/SerialLocation")]
+    [Route("api/serial-location")]
     [EnableCors("CorsApi")]
     public class SerialLocationController : BaseController
     {

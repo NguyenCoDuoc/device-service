@@ -76,6 +76,10 @@ public class AutoMapperProfile : Profile
         CreateMap<AttributeValue, AttributeValueDtoDetail>().ReverseMap();
         CreateMap<DeviceTypeAttribute, DeviceTypeAttributeDto>().ReverseMap();
         CreateMap<DeviceTypeAttribute, DeviceTypeAttributeDtoCreate>().ReverseMap();
+        CreateMap<DeviceAttribute, DeviceAttributeDto>().ReverseMap();
+        CreateMap<DeviceAttribute, DeviceAttributeDtoCreate>().ReverseMap();
+        CreateMap<SerialAttribute, SerialAttributeDto>().ReverseMap();
+        CreateMap<SerialAttribute, SerialAttributeDtoCreate>().ReverseMap();
 
         // ...
     }

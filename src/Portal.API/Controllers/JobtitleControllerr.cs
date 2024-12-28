@@ -9,7 +9,7 @@ using DeviceService.Common.Controllers;
 namespace DeviceService.API.Controllers
 {
     [ApiController]
-    [Route("api/Jobtitle")]
+    [Route("api/jobtitle")]
     [EnableCors("CorsApi")]
     public class JobtitleController : BaseController
     {

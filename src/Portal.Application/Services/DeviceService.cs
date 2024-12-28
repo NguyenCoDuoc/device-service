@@ -67,10 +67,10 @@ public class DeviceService
         return _mapper.Map<DeviceDto>(data);
     }
 
-    public async Task<IEnumerable<BaseDto>> GetAllAsync()
+    public async Task<IEnumerable<DeviceDto>> GetAllAsync()
     {
-        var data = await _DeviceRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<BaseDto>>(data);
+        var data = await _DeviceRepository.GetAllAsync(new List<string> { "Code","Name", "Id", "Model"});
+        return _mapper.Map<IEnumerable<DeviceDto>>(data);
     }
 
     public async Task<ServiceResult> GetByIdAsync(long id)

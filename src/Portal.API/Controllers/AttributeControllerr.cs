@@ -22,15 +22,10 @@ namespace DeviceService.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLists()
+        public async Task<IActionResult> GetLists([FromQuery] SearchParam searchParam)
         {
-            var searchParam = new SearchParam
-            {
-                ItemsPerPage = -1,
-                SortBy = "created_date",
-                SortDesc = false,
-            };
-            return Ok(await _AttributeService.GetPagingAsync(searchParam));
+            var data = await GetListsData(searchParam);
+            return Ok(data);
         }
 
         /// <summary>
