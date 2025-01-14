@@ -31,11 +31,21 @@ public class SerialService
     public async Task<PagingResult<SerialDto>> GetPagingAsync(SearchParam pagingParams)
     {
         var result = new PagingResult<SerialDto>()
-            { PageSize = pagingParams.ItemsPerPage, CurrentPage = pagingParams.Page };
-        var where = "serial_number ILIKE @serial_number OR description ILIKE @description";
+        { PageSize = pagingParams.ItemsPerPage, CurrentPage = pagingParams.Page };
+
+        var where = "";
         var param = new Dictionary<string, object>();
-        param.Add("serial_number", $"%{pagingParams.Term}%");
-        param.Add("description", $"%{pagingParams.Term}%");
+
+        if (!string.IsNullOrWhiteSpace(pagingParams.Term))
+        {
+            where = "((serial_number IS NULL OR serial_number ILIKE @serial_number)" +
+                " OR (serial_code IS NULL OR serial_code ILIKE @serial_code)" +
+                " OR description ILIKE @description)";
+
+            param.Add("serial_number", $"%{pagingParams.Term}%");
+            param.Add("serial_code", $"%{pagingParams.Term}%");
+            param.Add("description", $"%{pagingParams.Term}%");
+        }
 
         var data = await _SerialRepository.GetPageAsync<SerialDto>(pagingParams.Page, pagingParams.ItemsPerPage,
                 order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc, param: param, where: where);
