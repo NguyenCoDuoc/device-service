@@ -12,10 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Device.API/Device.API.csproj", "src/Device.API/"]
-COPY ["Portal.Common/Device.Common.csproj", "Device.Common/"]
-COPY ["src/Device.Application/Device.Application.csproj", "src/Device.Application/"]
-COPY ["src/Device.Domain/Device.Domain.csproj", "src/Device.Domain/"]
+COPY ["src/Portal.API/Device.API.csproj", "src/Device.API/"]
+COPY ["Portal.Common/Device.Common.csproj", "Portal.Common/"]
+COPY ["src/Portal.Application/Device.Application.csproj", "src/Device.Application/"]
+COPY ["src/Portal.Domain/Device.Domain.csproj", "src/Device.Domain/"]
 RUN dotnet restore "./src/Device.API/Device.API.csproj"
 COPY . .
 WORKDIR "/src/src/Device.API"

@@ -14,4 +14,6 @@ public interface IDeviceRepository : IDapperRepository<Device>
 
     //delete device  attribute
     Task<int> DeleteDeviceAttribute(long id, long current_user_id);
+
+    Task<Device> GetLastDeviceByTypeNameAsync(string deviceTypeName);
 }

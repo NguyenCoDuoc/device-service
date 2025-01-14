@@ -10,6 +10,8 @@
         public string? TenantId { get; set; }
         public long? Id { get; set; }
         public long DeviceTypeId { get; set; }
+        public string? DeviceTypeCode { get; set; }
+        public long IsDeleted { get; set; }
 
     }
 

@@ -65,7 +65,18 @@ namespace DeviceService.API.Controllers
         {
             return new JsonResult(await _SerialService.CreateAsync(model));
         }
-        
+
+        /// <summary>
+        /// Thêm mới Serial
+        /// </summary>
+        /// <param name="model"></param>
+        /// DUOCNC 20240812
+        [HttpGet("{serialId}/copy")]
+        public async Task<IActionResult> Copy(long serialId, int times)
+        {
+            return new JsonResult(await _SerialService.CopyAsync(serialId,times));
+        }
+
         /// <summary>
         /// Cập nhật Serial
         /// </summary>

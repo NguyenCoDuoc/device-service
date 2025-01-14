@@ -7,7 +7,9 @@ namespace DeviceService.Application.Validators
     {
         public SerialValidator()
         {
-            RuleFor(x => x.Name).NotNull().WithMessage("Name bắt buộc nhập");
+            RuleFor(x => x.WarrantyPeriod).NotNull().WithMessage("Số tháng bảo hành bắt buộc");
+            RuleFor(x => x.PurchaseDate).NotNull().WithMessage("Ngày mua bắt buộc");
+            RuleFor(x => x.LocationId).NotNull().WithMessage("Vị trí bắt buộc");
         }
     }
 }

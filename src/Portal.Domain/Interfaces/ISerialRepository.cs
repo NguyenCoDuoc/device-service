@@ -10,7 +10,8 @@ public interface ISerialRepository : IDapperRepository<Serial>
 
     //add serial  attribute
     Task<int> AddSerialAttribute(SerialAttribute serialAttribute, long current_user_id);
-
     //delete serial  attribute
     Task<int> DeleteSerialAttribute(long id, long current_user_id);
+
+    Task<Serial> GetLastSerialByDeviceCodeAsync(string deviceCode);
 }

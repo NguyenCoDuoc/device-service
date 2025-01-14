@@ -74,5 +74,21 @@ namespace DeviceService.Domain.Repositories
 
             return await ExecuteScalarAsync<int>(sql, parameters);
         }
+
+        public async Task<Serial> GetLastSerialByDeviceCodeAsync(string deviceCode)
+        {
+            var serialCode = "SER_" + deviceCode;
+            var sql = @"SELECT serial_number SerialNumber, serial_code SerialCode FROM serial
+                WHERE serial_code LIKE @serialCode || '%'
+                ORDER BY serial_code DESC
+                LIMIT 1";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@serialCode", serialCode }
+            };
+
+            return await QueryFirstOrDefaultAsync<Serial>(sql, parameters);
+        }
     }
 }

@@ -3,7 +3,6 @@
     public class SerialDto : BaseDto
     {
         public string? Code { get; set; }
-        public string? Name { get; set; }
         public string? SerialNumber { get; set; }
         public DateTime? PurchaseDate { get; set; } 
         public string? Description { get; set; }
@@ -13,6 +12,7 @@
         public long? LocationId { get; set; }
         public string? TenantId { get; set; }
         public long? Id { get; set; }
+        public string? SerialCode { get; set; }
 
     }
 
@@ -30,6 +30,8 @@
 
         public string? AttributeValue { get; set; }
         public int? Id { get; set; }
+
+        public long? CreatedBy { get; set; }
     }
 
     /// <summary>

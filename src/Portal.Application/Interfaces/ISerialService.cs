@@ -19,6 +19,7 @@ namespace DeviceService.Application.Interfaces
         /// <param name="model"></param>
         /// DUOCNC 20240916
         Task<ServiceResult> CreateAsync(SerialDtoCreate model);
+        Task<ServiceResult> CopyAsync(long id, int times);
 
         /// <summary>
         /// Cập nhật  Serial

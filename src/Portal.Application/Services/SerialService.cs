@@ -8,6 +8,8 @@ using Sun.Core.Share.Helpers.Params;
 using Sun.Core.Share.Helpers.Results;
 using Sun.Core.Share.Helpers.Util;
 using DeviceService.Domain.Repositories;
+using Sun.Core.Share.Constants;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DeviceService.Application.Services;
 
@@ -15,12 +17,14 @@ public class SerialService
     : ISerialService
 {
     private readonly ISerialRepository _SerialRepository;
+    private readonly IDeviceRepository _DeviceRepository;
     private readonly IMapper _mapper;
     private readonly long current_user_id;
 
-    public SerialService(ISerialRepository SerialRepository, IMapper mapper)
+    public SerialService(ISerialRepository SerialRepository, IDeviceRepository deviceRepository, IMapper mapper)
     {
         _SerialRepository = SerialRepository;
+        _DeviceRepository = deviceRepository;
         _mapper = mapper;
     }
 
@@ -45,6 +49,44 @@ public class SerialService
     {
         model.CreatedBy = current_user_id;
         model.CreatedDate = DateTime.Now;
+        model.IsDeleted = 0;
+
+        // Tạo mã tự động cho serial_number
+        var lastSerial = await _SerialRepository.GetLastSerialByDeviceCodeAsync(model.DeviceCode);
+        if (lastSerial != null)
+        {
+            // Tìm số cuối cùng trong mã device hiện tại
+            string currentCode = lastSerial.SerialCode;
+            string numberPart = string.Empty;
+
+            for (int i = currentCode.Length - 1; i >= 0; i--)
+            {
+                if (char.IsDigit(currentCode[i]))
+                {
+                    numberPart = currentCode[i] + numberPart;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (int.TryParse(numberPart, out int lastNumber))
+            {
+                model.SerialCode = $"{model.DeviceCode}{(lastNumber + 1).ToString().PadLeft(numberPart.Length, '0')}";
+            }
+            else
+            {
+                model.SerialCode = $"{model.DeviceCode}1";
+            }
+        }
+        else
+        {
+            // Nếu chưa có device nào của loại này
+            model.SerialCode = $"{model.DeviceCode}1";
+        }
+
+        model.SerialCode = "SER_" + model.SerialCode;
 
         var validator = new SerialValidator();
         var validationResult = await validator.ValidateAsync(model);
@@ -99,5 +141,97 @@ public class SerialService
     public async Task<int> DeleteSerialAttribute(long id)
     {
         return await _SerialRepository.DeleteSerialAttribute(id, current_user_id);
+    }
+
+    public async Task<ServiceResult> CopyAsync(long id, int times)
+    {
+        // Get original serial
+        var query = @"SELECT  warranty_period WarrantyPeriod,
+                           purchase_date PurchaseDate,
+                           id Id,
+                            device_id DeviceId,
+                           serial_code SerialCod,
+                           serial_number SerialNumber,
+                           location_id LocationId
+                    FROM serial WHERE id = @id and is_deleted = false;";
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", id }
+        };
+
+        var origin = await _SerialRepository.QueryFirstOrDefaultAsync<Serial?>(query, parameters);
+        if (origin == null)
+        {
+            return new ServiceResultError("Serial không tồn tại");
+        }
+
+        var query1 = @"SELECT * FROM device WHERE id = @id and is_deleted = false";
+        var parameters1 = new Dictionary<string, object>
+        {
+            { "@id", origin.DeviceId }
+        };
+        var device = await _DeviceRepository.QueryFirstOrDefaultAsync<Device?>(query1, parameters1);
+        if (device == null)
+        {
+            return new ServiceResultError("Device không tồn tại");
+        }
+
+        var copiedSerials = new List<SerialDto>();
+
+        // Copy serial records
+        for (int i = 0; i < times; i++)
+        {
+            var serialCopy = new SerialDtoCreate
+            {
+                DeviceCode = device.Code,
+                Description = origin.Description,
+                CreatedBy = current_user_id,
+                CreatedDate = DateTime.Now,
+                IsDeleted = 0,
+                PurchaseDate = origin.PurchaseDate,
+                DeviceId = origin.DeviceId,
+                WarrantyPeriod = origin.WarrantyPeriod,
+                LocationId = origin.LocationId,
+
+            };
+
+            // Create new serial with auto-generated code
+            var copyResult = await CreateAsync(serialCopy);
+            if (copyResult.Code == CommonConst.Success)
+            {
+                copiedSerials.Add((SerialDto)copyResult.Data);
+            }
+            else
+            {
+                return copyResult; // Return error if creation fails
+            }
+        }
+
+        // Get original serial attributes
+        var originalAttributes = await GetSerialAttributes(id);
+
+        // Copy attributes for each new serial
+        foreach (var copiedSerial in copiedSerials)
+        {
+            foreach (var attribute in originalAttributes)
+            {
+                var attributeCopy = new SerialAttributeDto
+                {
+                    SerialId = (long)copiedSerial.Id,
+                    AttributeId = attribute.AttributeId,
+                    Description = "copy",
+                    CreatedBy = current_user_id,
+                    AttributeValueId = attribute.AttributeValueId // Fix for CS9035
+                };
+
+                await AddSerialAttribute(attributeCopy);
+            }
+        }
+
+        return new ServiceResultSuccess(new
+        {
+            Message = $"Đã sao chép thành công {times} bản ghi",
+            CopiedSerials = copiedSerials
+        });
     }
 }

@@ -14,7 +14,7 @@ public class Serial : CrudFieldEntity<long>
     public string SerialNumber { get; set; }
 
     [Column("purchase_date")]
-    [Display(Name = "purchase_date")]
+    [Display(Name = "PurchaseDate")]
     public DateTime PurchaseDate { get; set; }
 
     [Column("warranty_period")]
@@ -36,5 +36,9 @@ public class Serial : CrudFieldEntity<long>
     [Column("description")]
     [Display(Name = "Description")]
     public string Description { get; set; }
+
+    [Column("serial_code")]
+    [Display(Name = "SerialCode")]
+    public string SerialCode { get; set; }
 
 }

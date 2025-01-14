@@ -12,13 +12,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Device.API/Device.API.csproj", "src/Device.API/"]
-COPY ["Device.Common/Device.Common.csproj", "Device.Common/"]
-COPY ["src/Device.Application/Device.Application.csproj", "src/Device.Application/"]
-COPY ["src/DeviceService.Domain/DeviceService.Domain.csproj", "src/DeviceService.Domain/"]
-RUN dotnet restore "./src/Device.API/Device.API.csproj"
+COPY ["src/Portal.API/Device.API.csproj", "src/Device.API/"]
+COPY ["Portal.Common/Portal.Common.csproj", "Portal.Common/"]
+COPY ["src/Portal.Application/Device.Application.csproj", "src/Device.Application/"]
+COPY ["src/Portal.Domain/Portal.Domain.csproj", "src/DeviceService.Domain/"]
+RUN dotnet restore "./src/Portal.API/Device.API.csproj"
 COPY . .
-WORKDIR "/src/src/Device.API"
+WORKDIR "./src/Device.API"
 RUN dotnet build "./Device.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

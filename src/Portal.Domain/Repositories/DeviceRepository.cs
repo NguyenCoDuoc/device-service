@@ -14,7 +14,7 @@ namespace DeviceService.Domain.Repositories
         }
         public DeviceRepository() : base()
         {
-           
+
 
         }
         public async Task<Device> GetByCodeAsync(string code)
@@ -98,6 +98,22 @@ namespace DeviceService.Domain.Repositories
             };
 
             return await ExecuteScalarAsync<int>(sql, parameters);
+        }
+
+        public async Task<Device> GetLastDeviceByTypeNameAsync(string deviceTypeCode)
+        {
+            var sql = @"SELECT * FROM device 
+                WHERE code LIKE @DeviceTypeCode || '%' 
+                AND is_deleted = false
+                ORDER BY code DESC 
+                LIMIT 1";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "DeviceTypeCode", deviceTypeCode }
+            };
+
+            return await QueryFirstOrDefaultAsync<Device>(sql, parameters);
         }
 
     }

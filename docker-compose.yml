@@ -1,57 +1,23 @@
 ﻿version: '3.9'
 
 services:
-  portal.api:
+  device.api:
     build:
       context: .
-      dockerfile: src/Portal.API/Dockerfile
-    image: portal_api:latest
+      dockerfile: src/Device.API/Dockerfile
+    image: device_api:latest
     ports:
       - "6001:8080"  # Port mapping cho API chính
       - "6041:8081"  # Nếu có một cổng phụ nào khác
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  # Môi trường phát triển
-    depends_on:
-      - sendmail.api  # Thêm nếu portal.api phụ thuộc vào sendmail.api
-      - portalmq.api  # Thêm nếu portal.api phụ thuộc vào portalmq.api
     #volumes:
-    #  - ./data/portal:/app/data  # Ví dụ: Gắn volume cho lưu trữ dữ liệu nếu cần thiết
+    #  - ./data/device:/app/data  # Ví dụ: Gắn volume cho lưu trữ dữ liệu nếu cần thiết
     restart: unless-stopped  # Tự động khởi động lại trừ khi bị tắt
     networks:
-      - portal-network
-
-  sendmail.api:
-    build:
-      context: .
-      dockerfile: SendMail.API/Dockerfile
-    image: sendmail_api:latest
-    ports:
-      - "6002:8080"  # Port mapping cho sendmail API
-      - "6042:8081"  # Cổng phụ nếu có
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    #volumes:
-    #  - ./data/sendmail:/app/data  # Ví dụ: Gắn volume nếu cần
-    restart: unless-stopped  # Tự động khởi động lại trừ khi bị tắt
-    networks:
-      - portal-network
-  portalmq.api:
-    build:
-      context: .
-      dockerfile: PortalMQ/PortalMQ.API/Dockerfile
-    image: portalmq_api:latest
-    ports:
-      - "6003:8080"  # Port mapping cho portalmq API
-      - "6043:8081"  # Cổng phụ nếu có
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    #volumes:
-    #  - ./data/portalmq:/app/data  # Ví dụ: Gắn volume nếu cần
-    restart: unless-stopped  # Tự động khởi động lại trừ khi bị tắt
-    networks:
-      - portal-network
+      - device-network
 
 # Cấu hình mạng cho các services giao tiếp
 networks:
-  portal-network:
+  device-network:
     driver: bridge
