@@ -14,4 +14,6 @@ public interface ISerialRepository : IDapperRepository<Serial>
     Task<int> DeleteSerialAttribute(long id, long current_user_id);
 
     Task<Serial> GetLastSerialByDeviceCodeAsync(string deviceCode);
+
+    Task<int?> GetMaxSerialIdAsync();
 }

@@ -1,5 +1,6 @@
 using DeviceService.Domain.Entities;
 using DeviceService.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Sun.Core.DataAccess.Repositories;
 using Sun.Core.Share.Helpers.Util;
 using Serial = DeviceService.Domain.Entities.Serial;
@@ -25,7 +26,7 @@ namespace DeviceService.Domain.Repositories
                         FROM serial_attribute dat
                         LEFT JOIN attribute a ON dat.attribute_id = a.id
                         LEFT JOIN attribute_value av ON dat.attribute_value_id = av.id
-                        WHERE dat.is_deleted=false";
+                        WHERE dat.is_deleted=false and serial_id=@serialId";
 
             return (await QueryAsync<SerialAttribute>(sql, new Dictionary<string, object> { { "serialId", serialId } })).ToList();
         }
@@ -78,7 +79,7 @@ namespace DeviceService.Domain.Repositories
         public async Task<Serial> GetLastSerialByDeviceCodeAsync(string deviceCode)
         {
             var serialCode = "SER_" + deviceCode;
-            var sql = @"SELECT serial_number SerialNumber, serial_code SerialCode FROM serial
+            var sql = @"SELECT id ID, serial_number SerialNumber, serial_code SerialCode FROM serial
                 WHERE serial_code LIKE @serialCode || '%'
                 ORDER BY serial_code DESC
                 LIMIT 1";
@@ -90,5 +91,15 @@ namespace DeviceService.Domain.Repositories
 
             return await QueryFirstOrDefaultAsync<Serial>(sql, parameters);
         }
+
+        public async Task<int?> GetMaxSerialIdAsync()
+        {
+            var sql = @"SELECT MAX(Id) AS MaxId FROM serial";
+
+            var result = await QueryFirstOrDefaultAsync<int?>(sql, new Dictionary<string, object>());
+
+            return result;
+        }
+
     }
 }

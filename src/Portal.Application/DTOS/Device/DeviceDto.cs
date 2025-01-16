@@ -13,6 +13,8 @@
         public string? DeviceTypeCode { get; set; }
         public long IsDeleted { get; set; }
 
+        public int serials { get; set; }
+
     }
 
     public class DeviceAttributeDto

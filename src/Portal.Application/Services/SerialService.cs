@@ -31,29 +31,41 @@ public class SerialService
     public async Task<PagingResult<SerialDto>> GetPagingAsync(SearchParam pagingParams)
     {
         var result = new PagingResult<SerialDto>()
-        { PageSize = pagingParams.ItemsPerPage, CurrentPage = pagingParams.Page };
+        {
+            PageSize = pagingParams.ItemsPerPage,
+            CurrentPage = pagingParams.Page
+        };
 
-        var where = "";
+        var where = new List<string>();
         var param = new Dictionary<string, object>();
 
-        if (!string.IsNullOrWhiteSpace(pagingParams.Term))
+        // Hàm giúp thêm điều kiện tìm kiếm vào where clause
+        void AddSearchCondition(string field, string value)
         {
-            where = "((serial_number IS NULL OR serial_number ILIKE @serial_number)" +
-                " OR (serial_code IS NULL OR serial_code ILIKE @serial_code)" +
-                " OR description ILIKE @description)";
-
-            param.Add("serial_number", $"%{pagingParams.Term}%");
-            param.Add("serial_code", $"%{pagingParams.Term}%");
-            param.Add("description", $"%{pagingParams.Term}%");
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                where.Add($"(@{field} IS NULL OR {field} ILIKE @{field})");
+                param.Add(field, $"%{value}%");
+            }
         }
 
-        var data = await _SerialRepository.GetPageAsync<SerialDto>(pagingParams.Page, pagingParams.ItemsPerPage,
-                order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc, param: param, where: where);
+        // Thêm các điều kiện tìm kiếm cho từng trường
+        AddSearchCondition("description", pagingParams.Term);
+
+        // Kết hợp các điều kiện lại với nhau
+        var whereClause = where.Count > 0 ? string.Join(" AND ", where) : "";
+
+        var data = await _SerialRepository.GetPageAsync<SerialDto>(
+            pagingParams.Page, pagingParams.ItemsPerPage,
+            order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc,
+            param: param, where: whereClause);
 
         result.Data = _mapper.Map<List<SerialDto>>(data.Data);
         result.TotalRows = data.TotalRow;
         return result;
     }
+
+
 
     public async Task<ServiceResult> CreateAsync(SerialDtoCreate model)
     {
@@ -63,38 +75,22 @@ public class SerialService
 
         // Tạo mã tự động cho serial_number
         var lastSerial = await _SerialRepository.GetLastSerialByDeviceCodeAsync(model.DeviceCode);
+        long newId = 1; // Mặc định nếu chưa có bản ghi nào cho DeviceCode
+
         if (lastSerial != null)
         {
-            // Tìm số cuối cùng trong mã device hiện tại
-            string currentCode = lastSerial.SerialCode;
-            string numberPart = string.Empty;
-
-            for (int i = currentCode.Length - 1; i >= 0; i--)
-            {
-                if (char.IsDigit(currentCode[i]))
-                {
-                    numberPart = currentCode[i] + numberPart;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (int.TryParse(numberPart, out int lastNumber))
-            {
-                model.SerialCode = $"{model.DeviceCode}{(lastNumber + 1).ToString().PadLeft(numberPart.Length, '0')}";
-            }
-            else
-            {
-                model.SerialCode = $"{model.DeviceCode}1";
-            }
+            // Lấy ID của serial cuối cùng và cộng 1
+            newId = lastSerial.ID + 1;
         }
         else
         {
-            // Nếu chưa có device nào của loại này
-            model.SerialCode = $"{model.DeviceCode}1";
+            // Nếu không tìm thấy lastSerial, lấy ID lớn nhất từ bảng Serial
+            var maxId = await _SerialRepository.GetMaxSerialIdAsync();
+            newId = maxId.HasValue ? maxId.Value + 1 : 1; // Nếu không có ID lớn nhất, sử dụng ID bắt đầu từ 1
         }
+
+        // Tạo SerialCode theo mẫu: <DeviceCode><ID tự tăng>
+        model.SerialCode = $"{model.DeviceCode}{newId}";
 
         model.SerialCode = "SER_" + model.SerialCode;
 
@@ -107,10 +103,12 @@ public class SerialService
             return new ServiceResultError(errorMessage);
         }
 
+        // Thêm bản ghi serial vào cơ sở dữ liệu
         var data = await _SerialRepository.InsertAsync(_mapper.Map<Serial>(model));
 
         return new ServiceResultSuccess(_mapper.Map<SerialDto>(data));
     }
+
 
     public async Task<SerialDto> UpdateAsync(SerialDto model)
     {
@@ -138,9 +136,9 @@ public class SerialService
         return await _SerialRepository.DeleteAsync(id, current_user_id);
     }
 
-    public async Task<List<SerialAttributeDto>> GetSerialAttributes(long deviceId)
+    public async Task<List<SerialAttributeDto>> GetSerialAttributes(long serialId)
     {
-        return _mapper.Map<List<SerialAttributeDto>>(await _SerialRepository.GetSerialAttributes(deviceId));
+        return _mapper.Map<List<SerialAttributeDto>>(await _SerialRepository.GetSerialAttributes(serialId));
     }
 
     public async Task<int> AddSerialAttribute(SerialAttributeDto serialAttribute)

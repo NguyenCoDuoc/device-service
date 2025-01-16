@@ -15,29 +15,52 @@ public class DeviceService
     : IDeviceService
 {
     private readonly IDeviceRepository _DeviceRepository;
+    private readonly ISerialRepository _SerialRepository;
     private readonly IMapper _mapper;
     private readonly long current_user_id;
 
-    public DeviceService(IDeviceRepository DeviceRepository, IMapper mapper)
+    public DeviceService(IDeviceRepository DeviceRepository, ISerialRepository serialRepository, IMapper mapper)
     {
         _DeviceRepository = DeviceRepository;
+        _SerialRepository = serialRepository;
         _mapper = mapper;
     }
 
     public async Task<PagingResult<DeviceDto>> GetPagingAsync(SearchParam pagingParams)
     {
         var result = new PagingResult<DeviceDto>()
-            { PageSize = pagingParams.ItemsPerPage, CurrentPage = pagingParams.Page };
+        {
+            PageSize = pagingParams.ItemsPerPage,
+            CurrentPage = pagingParams.Page
+        };
+
         var where = "description ILIKE @description";
-        var param = new Dictionary<string, object>();
-        param.Add("description", $"%{pagingParams.Term}%");
-        var data = await _DeviceRepository.GetPageAsync<DeviceDto>(pagingParams.Page, pagingParams.ItemsPerPage,
-               order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc, param: param, where: where);
+        var param = new Dictionary<string, object>
+    {
+        { "description", $"%{pagingParams.Term}%" }
+    };
+
+        // Lấy danh sách thiết bị từ bảng Device
+        var data = await _DeviceRepository.GetPageAsync<DeviceDto>(
+            pagingParams.Page, pagingParams.ItemsPerPage,
+            order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc,
+            param: param, where: where);
+
+        // Truy vấn tổng số serials không bị xóa của mỗi Device
+        foreach (var device in data.Data)
+        {
+            var totalSerials = await _SerialRepository.CountAsync(
+                where: "device_id = @deviceId AND is_deleted = false",
+                param: new Dictionary<string, object> { { "deviceId", device.Id } });
+            device.Quantity = totalSerials; // Gắn tổng số serials vào DeviceDto
+        }
 
         result.Data = _mapper.Map<List<DeviceDto>>(data.Data);
         result.TotalRows = data.TotalRow;
+
         return result;
     }
+
 
     public async Task<ServiceResult> CreateAsync(DeviceDtoCreate model)
     {
@@ -103,7 +126,7 @@ public class DeviceService
 
     public async Task<IEnumerable<DeviceDto>> GetAllAsync()
     {
-        var data = await _DeviceRepository.GetAllAsync(new List<string> { "Code","Name", "Id", "Model"});
+        var data = await _DeviceRepository.GetAllAsync(new List<string> { "Code", "Name", "Id", "Model" });
         return _mapper.Map<IEnumerable<DeviceDto>>(data);
     }
 
@@ -116,6 +139,11 @@ public class DeviceService
 
         DeviceDto DeviceDto = _mapper.Map<DeviceDto>(entity);
 
+        var totalSerials = await _SerialRepository.CountAsync(
+                where: "device_id = @deviceId AND is_deleted = false",
+                param: new Dictionary<string, object> { { "deviceId", DeviceDto.Id } });
+        DeviceDto.serials = totalSerials; // Gắn tổng số serials vào DeviceDto
+        DeviceDto.Quantity = totalSerials; // Gắn tổng số serials vào DeviceDto
 
         return new ServiceResultSuccess(DeviceDto);
     }
