@@ -11,7 +11,7 @@ namespace DeviceService.Application.Interfaces
         /// </summary> 
         /// <param name="pagingParams"></param>
         /// DUOCNC 20240916
-        Task<PagingResult<SerialDto>> GetPagingAsync(SearchParam pagingParams);
+        Task<PagingResult<SerialDto>> GetPagingAsync(SerialDtoSearch pagingParams);
 
         /// <summary>
         /// Tạo  Serial

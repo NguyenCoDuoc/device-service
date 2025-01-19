@@ -18,17 +18,19 @@ public class SerialService
 {
     private readonly ISerialRepository _SerialRepository;
     private readonly IDeviceRepository _DeviceRepository;
+    private readonly ILocationRepository _locationRepository;
     private readonly IMapper _mapper;
     private readonly long current_user_id;
 
-    public SerialService(ISerialRepository SerialRepository, IDeviceRepository deviceRepository, IMapper mapper)
+    public SerialService(ISerialRepository SerialRepository, IDeviceRepository deviceRepository, ILocationRepository locationRepository,IMapper mapper)
     {
         _SerialRepository = SerialRepository;
         _DeviceRepository = deviceRepository;
+        _locationRepository = locationRepository;
         _mapper = mapper;
     }
 
-    public async Task<PagingResult<SerialDto>> GetPagingAsync(SearchParam pagingParams)
+    public async Task<PagingResult<SerialDto>> GetPagingAsync(SerialDtoSearch pagingParams)
     {
         var result = new PagingResult<SerialDto>()
         {
@@ -49,21 +51,49 @@ public class SerialService
             }
         }
 
+        void AddExactCondition(string field, object value)
+        {
+            if (value != null && value is long longValue && longValue != 0)
+            {
+                where.Add($"(@{field} IS NULL OR {field} = @{field})");
+                param.Add(field, value);
+            }
+        }
+
         // Thêm các điều kiện tìm kiếm cho từng trường
         AddSearchCondition("description", pagingParams.Term);
+        AddExactCondition("location_id", pagingParams.LocationId);
 
         // Kết hợp các điều kiện lại với nhau
         var whereClause = where.Count > 0 ? string.Join(" AND ", where) : "";
 
+        // Lấy dữ liệu từ repository
         var data = await _SerialRepository.GetPageAsync<SerialDto>(
             pagingParams.Page, pagingParams.ItemsPerPage,
             order: pagingParams.SortBy, sortDesc: pagingParams.SortDesc,
             param: param, where: whereClause);
 
+        // Lấy tất cả các location từ service
+        var locations = await _locationRepository.GetAllAsync();
+
+        // Tạo một dictionary để tra cứu nhanh locationName theo locationId
+        var locationDictionary = locations.ToDictionary(l => l.ID, l => l.Name);
+
+        // Gán tên vị trí cho từng SerialDto
+        foreach (var serial in data.Data)
+        {
+            if (serial.LocationId.HasValue && locationDictionary.ContainsKey(serial.LocationId.Value))
+            {
+                serial.LocatioName = locationDictionary[serial.LocationId.Value];
+            }
+        }
+
         result.Data = _mapper.Map<List<SerialDto>>(data.Data);
         result.TotalRows = data.TotalRow;
         return result;
     }
+
+
 
 
 

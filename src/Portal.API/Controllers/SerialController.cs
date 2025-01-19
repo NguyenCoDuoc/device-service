@@ -28,7 +28,7 @@ namespace DeviceService.API.Controllers
         /// <param name="searchParam"></param>
         /// DUOCNC 20240812
         [HttpGet]
-        public async Task<IActionResult> GetLists([FromQuery] SearchParam searchParam)
+        public async Task<IActionResult> GetLists([FromQuery] SerialDtoSearch searchParam)
         {
             var data = await GetListsData(searchParam);
             return Ok(data);
@@ -39,7 +39,7 @@ namespace DeviceService.API.Controllers
         /// </summary>
         /// <param name="searchParam"></param>
         /// DUOCNC 20240812
-        private async Task<PagingResult<SerialDto>> GetListsData(SearchParam searchParam)
+        private async Task<PagingResult<SerialDto>> GetListsData(SerialDtoSearch searchParam)
         {
             return await _SerialService.GetPagingAsync(searchParam);
         }

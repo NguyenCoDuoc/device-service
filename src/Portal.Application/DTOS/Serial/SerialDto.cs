@@ -14,6 +14,8 @@
         public long? Id { get; set; }
         public string? SerialCode { get; set; }
 
+        public string? LocatioName { get; set; }
+
     }
 
     public class SerialAttributeDto
