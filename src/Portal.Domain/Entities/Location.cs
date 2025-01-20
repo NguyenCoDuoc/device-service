@@ -25,6 +25,6 @@ public class Location : CrudFieldEntity<long>
     public  long ParentId { get; set; }
 
     [Column("department_id")]
-    [Display(Name = "DpartmentId")]
-    public long DpartmentId { get; set; }
+    [Display(Name = "DepartmentId")]
+    public long DepartmentId { get; set; }
 }
